@@ -43,6 +43,7 @@
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 1.8rem;
             margin-bottom: 3rem;
+            align-items: center; /* 确保基础卡片对齐 */
         }
         .plan {
             background: white;
@@ -52,12 +53,44 @@
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid #e4e9f0;
             text-align: center;
+            position: relative;
         }
         .plan:hover {
             transform: translateY(-4px);
             box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
             border-color: #bcd0e6;
         }
+        
+        /* 🔥 Basic 爆款高亮专属专属 CSS 样式 */
+        .plan.popular {
+            border: 2px solid #1f6e8c;
+            box-shadow: 0 20px 35px -10px rgba(31, 110, 140, 0.15);
+            transform: scale(1.04); /* 视觉上微微放大 4% 凸显爆款 */
+        }
+        .plan.popular:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 25px 40px -10px rgba(31, 110, 140, 0.25);
+        }
+        .popular-tag {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #ff4d4d, #f9cb28);
+            color: white;
+            padding: 0.25rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(255, 77, 77, 0.25);
+            white-space: nowrap;
+        }
+        /* 🎯 爆款按钮做成实色，视觉吸引力拉满 */
+        .plan.popular .btn-buy {
+            background: linear-gradient(135deg, #1f6e8c 0%, #0e5a74 100%);
+            box-shadow: 0 4px 12px rgba(31, 110, 140, 0.2);
+        }
+
         .plan-name {
             font-size: 1.8rem;
             font-weight: 700;
@@ -110,13 +143,14 @@
             font-weight: 600;
             padding: 0.75rem 1.8rem;
             border-radius: 60px;
-            transition: background 0.2s;
+            transition: all 0.2s;
             margin-top: 0.5rem;
             width: 100%;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .btn-buy:hover {
             background: #0e5a74;
+            transform: scale(1.02);
         }
         .footer {
             text-align: center;
@@ -136,8 +170,10 @@
         }
         @media (max-width: 700px) {
             body { padding: 1rem; }
-            .pricing-grid { gap: 1rem; }
-            .plan { padding: 1.2rem; }
+            .pricing-grid { gap: 1.5rem; display: flex; flex-direction: column; }
+            .plan { width: 100%; }
+            .plan.popular { transform: scale(1); } /* 移动端取消放大避免变形 */
+            .plan.popular:hover { transform: translateY(-4px) scale(1); }
         }
     </style>
 </head>
@@ -149,49 +185,49 @@
     </header>
 
     <div class="pricing-grid">
-        <!-- Starter -->
         <div class="plan">
             <div class="plan-name">Starter</div>
-            <div class="price">$0.99 <small>USD</small></div>
-            <div class="tokens">🎯 0.2M tokens</div>
-            <ul class="features">
-                <li>200K tokens quota</li>
-                <li>DeepSeek / Gemini</li>
-                <li>1x concurrent request</li>
-            </ul>
-            <a href="https://buy.stripe.com/3cI14n4lFgD53ylfA07EQ03" class="btn-buy" target="_blank">Buy Starter →</a>
-        </div>
-        <!-- Basic -->
-        <div class="plan">
-            <div class="plan-name">Basic</div>
-            <div class="price">$2.99 <small>USD</small></div>
+            <div class="price">$4.99 <small>USD</small></div>
             <div class="tokens">🎯 2M tokens</div>
             <ul class="features">
                 <li>2M tokens quota</li>
-                <li>All models support</li>
+                <li>DeepSeek / Gemini</li>
                 <li>3x concurrent requests</li>
+            </ul>
+            <a href="https://buy.stripe.com/3cI14n4lFgD53ylfA07EQ03" class="btn-buy" target="_blank">Buy Starter →</a>
+        </div>
+
+        <div class="plan popular">
+            <div class="popular-tag">⭐ Best Seller</div>
+            <div class="plan-name">Basic</div>
+            <div class="price">$9.99 <small>USD</small></div>
+            <div class="tokens">🎯 8M tokens</div>
+            <ul class="features">
+                <li>8M tokens quota</li>
+                <li>All models support</li>
+                <li>5x concurrent requests</li>
             </ul>
             <a href="https://buy.stripe.com/3cI8wPcSb2MfecZafG7EQ02" class="btn-buy" target="_blank">Buy Basic →</a>
         </div>
-        <!-- Pro -->
+
         <div class="plan">
             <div class="plan-name">Pro</div>
-            <div class="price">$9.99 <small>USD</small></div>
-            <div class="tokens">🎯 10M tokens</div>
+            <div class="price">$29.99 <small>USD</small></div>
+            <div class="tokens">🎯 20M tokens</div>
             <ul class="features">
-                <li>10M tokens quota</li>
+                <li>20M tokens quota</li>
                 <li>Priority routing</li>
-                <li>10x concurrency</li>
+                <li>15x concurrency</li>
             </ul>
             <a href="https://buy.stripe.com/eVq9AT9FZgD50m987y7EQ01" class="btn-buy" target="_blank">Buy Pro →</a>
         </div>
-        <!-- Enterprise -->
+
         <div class="plan">
             <div class="plan-name">Enterprise</div>
-            <div class="price">$39.99 <small>USD</small></div>
-            <div class="tokens">🎯 50M tokens</div>
+            <div class="price">$99.99 <small>USD</small></div>
+            <div class="tokens">🎯 80M tokens</div>
             <ul class="features">
-                <li>50M tokens quota</li>
+                <li>80M tokens quota</li>
                 <li>Dedicated support</li>
                 <li>Custom SLA</li>
             </ul>
@@ -202,7 +238,7 @@
     <div class="footer">
         ✅ OpenAI compatible · Instant delivery · Stripe & USDT accepted<br>
         📱 Need help? <a href="https://t.me/DINGDING925" target="_blank">Contact us on Telegram</a>
-        <div class="contact">⚡ 自助下单，付款后自动发送 API Key 至邮箱</div>
+        <div class="contact">⚡ Instant Delivery: Your API Key will be sent to your email immediately after payment.</div>
     </div>
 </div>
 </body>
