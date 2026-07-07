@@ -46,14 +46,28 @@
     }
     .button.secondary { background: #fff; color: #0d5c62; }
     .hero {
+      position: relative;
+      overflow: hidden;
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
       gap: 34px;
       align-items: center;
       padding: 58px 6vw 42px;
-      background: linear-gradient(135deg, #f8fbfb, #eef6f3);
+      background: linear-gradient(135deg, #f8fbfb 0%, #eef8f7 52%, #e8f2fb 100%);
       border-bottom: 1px solid #dfe8e8;
     }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 58%;
+      background:
+        linear-gradient(90deg, rgba(248,251,251,1) 0%, rgba(248,251,251,.68) 34%, rgba(248,251,251,.1) 100%),
+        url("../assets/sclinks-banner.png") right center / cover no-repeat;
+      opacity: .22;
+      pointer-events: none;
+    }
+    .hero > * { position: relative; z-index: 1; }
     .eyebrow {
       margin: 0 0 12px;
       color: #0d5c62;
@@ -80,8 +94,9 @@
       padding: 22px;
       border: 1px solid #d7e3e2;
       border-radius: 8px;
-      background: #fff;
-      box-shadow: 0 16px 36px rgba(21, 54, 63, .08);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 18px 42px rgba(21, 54, 63, .12);
+      backdrop-filter: blur(8px);
     }
     .hero-panel h2 { margin-top: 0; }
     .checklist { margin: 12px 0 0; padding: 0; list-style: none; }
@@ -163,13 +178,17 @@
     .table th { background: #f0f6f5; color: #12313f; }
     ul { margin: 8px 0 0; padding-left: 20px; }
     .cta {
+      position: relative;
+      overflow: hidden;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 18px;
       align-items: center;
       padding: 24px;
       border-radius: 8px;
-      background: #12313f;
+      background:
+        linear-gradient(100deg, rgba(11,37,52,.98) 0%, rgba(13,92,98,.92) 48%, rgba(2,17,43,.86) 100%),
+        url("../assets/sclinks-banner.png") right center / cover no-repeat;
       color: #fff;
     }
     .cta h2 { color: #fff; }
