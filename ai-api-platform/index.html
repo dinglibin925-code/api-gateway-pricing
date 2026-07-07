@@ -195,7 +195,16 @@
     .cta p { color: #d6e6e5; }
     .cta-actions { display: flex; flex-wrap: wrap; gap: 10px; }
     .cta .button.secondary { border-color: #d6e6e5; background: transparent; color: #fff; }
-    .cta .button.contact-chip { cursor: default; }
+    .cta button.button {
+      font: inherit;
+      cursor: pointer;
+    }
+    .cta .contact-tip {
+      flex-basis: 100%;
+      min-height: 20px;
+      color: #bfecef;
+      font-size: 13px;
+    }
     footer {
       padding: 24px 6vw 34px;
       color: #647780;
@@ -399,10 +408,11 @@
         <p>发送你的使用场景、预计用户数、是否已有域名服务器、准备接入的模型渠道，我们会先判断是否适合标准部署。</p>
       </div>
       <div class="cta-actions">
-        <span class="button contact-chip">微信：shangchen-001</span>
-        <a class="button secondary" href="https://wpa.qq.com/msgrd?v=3&uin=1402523849&site=qq&menu=yes">QQ：1402523849</a>
+        <button class="button" type="button" data-copy-contact="shangchen-001" data-copy-label="微信">微信咨询</button>
+        <a class="button secondary" href="https://wpa.qq.com/msgrd?v=3&uin=1402523849&site=qq&menu=yes">QQ咨询</a>
         <a class="button secondary" href="https://t.me/SCLinks001">Telegram</a>
-        <a class="button secondary" href="mailto:sclinks.service@gmail.com">邮件咨询</a>
+        <button class="button secondary" type="button" data-copy-contact="sclinks.service@gmail.com" data-copy-label="邮箱">邮件咨询</button>
+        <div class="contact-tip" aria-live="polite"></div>
       </div>
     </section>
   </main>
@@ -410,5 +420,24 @@
   <footer>
     SC Links B2B Service · 国内客户 AI接口管理平台搭建与维护服务。api.sc-links.com 作为系统用途，不作为陌生客户营销演示入口。
   </footer>
+  <script>
+    document.querySelectorAll("[data-copy-contact]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var contact = button.getAttribute("data-copy-contact");
+        var label = button.getAttribute("data-copy-label") || "联系方式";
+        var tip = button.parentElement.querySelector(".contact-tip");
+        function done() {
+          if (tip) tip.textContent = label + "已复制，请添加后说明你的使用场景。";
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(contact).then(done).catch(function () {
+            if (tip) tip.textContent = label + "：" + contact;
+          });
+        } else if (tip) {
+          tip.textContent = label + "：" + contact;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
