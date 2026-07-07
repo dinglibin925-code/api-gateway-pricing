@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI接口管理平台搭建服务 | SC Links</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #172033;
+      background: #f4f7f7;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 6vw;
+      border-bottom: 1px solid #dfe8e8;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(10px);
+    }
+    .brand { font-weight: 800; color: #12313f; }
+    .nav { display: flex; align-items: center; gap: 16px; font-size: 14px; color: #47616b; }
+    .nav a { text-decoration: none; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 6px;
+      border: 1px solid #0d5c62;
+      background: #0d5c62;
+      color: #fff;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .button.secondary { background: #fff; color: #0d5c62; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap: 34px;
+      align-items: center;
+      padding: 58px 6vw 42px;
+      background: linear-gradient(135deg, #f8fbfb, #eef6f3);
+      border-bottom: 1px solid #dfe8e8;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #0d5c62;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      color: #102b35;
+      font-size: 42px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 780px;
+      margin: 18px 0 0;
+      color: #425965;
+      font-size: 18px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .hero-panel {
+      padding: 22px;
+      border: 1px solid #d7e3e2;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 16px 36px rgba(21, 54, 63, .08);
+    }
+    .hero-panel h2 { margin-top: 0; }
+    .checklist { margin: 12px 0 0; padding: 0; list-style: none; }
+    .checklist li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      margin: 9px 0;
+      color: #314a55;
+    }
+    .checklist li::before { content: "✓"; color: #0d5c62; font-weight: 800; }
+    main { padding: 36px 6vw 60px; }
+    section { max-width: 1180px; margin: 0 auto 34px; }
+    h2 { margin: 0 0 16px; color: #12313f; font-size: 25px; line-height: 1.3; letter-spacing: 0; }
+    h3 { margin: 0 0 8px; color: #12313f; font-size: 17px; line-height: 1.35; letter-spacing: 0; }
+    p { margin: 8px 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .grid.two { grid-template-columns: repeat(2, 1fr); }
+    .card {
+      padding: 18px;
+      border: 1px solid #dce6e6;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .muted { color: #5d7078; }
+    .price-grid {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(3, .94fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+    .price {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      border: 1px solid #d9e4e7;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .price.primary {
+      border: 2px solid #0d5c62;
+      background: #f3faf8;
+      box-shadow: inset 0 5px 0 #0d5c62;
+    }
+    .amount { display: block; color: #0d5c62; font-weight: 900; line-height: 1.18; }
+    .primary .amount { font-size: 31px; }
+    .secondary .amount { font-size: 23px; }
+    .badge {
+      align-self: flex-start;
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: #e6f2ef;
+      color: #15575a;
+      font-size: 12px;
+      line-height: 1.6;
+      font-weight: 800;
+    }
+    .note {
+      padding: 15px 18px;
+      border-left: 5px solid #e5a93f;
+      border-radius: 8px;
+      background: #fffaf0;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .table th, .table td {
+      border: 1px solid #dce5e5;
+      padding: 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+    .table th { background: #f0f6f5; color: #12313f; }
+    ul { margin: 8px 0 0; padding-left: 20px; }
+    .cta {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 24px;
+      border-radius: 8px;
+      background: #12313f;
+      color: #fff;
+    }
+    .cta h2 { color: #fff; }
+    .cta p { color: #d6e6e5; }
+    .cta-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .cta .button.secondary { border-color: #d6e6e5; background: transparent; color: #fff; }
+    footer {
+      padding: 24px 6vw 34px;
+      color: #647780;
+      border-top: 1px solid #dfe8e8;
+      background: #fff;
+      font-size: 13px;
+    }
+    @media (max-width: 920px) {
+      .hero, .cta { grid-template-columns: 1fr; }
+      .grid, .grid.two, .price-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 34px; }
+      .nav { display: none; }
+    }
+    @media (max-width: 560px) {
+      .topbar, .hero, main, footer { padding-left: 20px; padding-right: 20px; }
+      h1 { font-size: 30px; }
+      .hero-actions, .cta-actions { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">SC Links</div>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#scenarios">使用场景</a>
+      <a href="#pricing">套餐</a>
+      <a href="#resources">云资源</a>
+      <a href="#faq">FAQ</a>
+      <a class="button" href="#contact">咨询搭建</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">AI Interface Gateway Service</p>
+      <h1>AI接口管理平台搭建与维护服务</h1>
+      <p class="lead">我们帮国内客户搭建自己的 AI 接口管理平台，用于统一多模型接口、隐藏原始 Key、分配额度、查看调用日志、控制成本，并按需提供后续维护。</p>
+      <div class="hero-actions">
+        <a class="button" href="#contact">获取服务方案</a>
+        <a class="button secondary" href="#pricing">查看套餐</a>
+      </div>
+    </div>
+    <aside class="hero-panel">
+      <h2>一句话说明</h2>
+      <p>你提供域名、服务器和模型渠道，我们负责把 AI 接口管理平台搭建、配置、测试并交付给你使用。</p>
+      <ul class="checklist">
+        <li>前端产品只需接一个兼容接口</li>
+        <li>学员、会员、员工、客户可独立分配 Key 和额度</li>
+        <li>后台查看调用、消耗、日志和模型渠道状态</li>
+      </ul>
+    </aside>
+  </section>
+
+  <main>
+    <section>
+      <h2>适合谁</h2>
+      <div class="grid">
+        <div class="card"><h3>AI工具站 / 应用站</h3><p>已有 AI 写作、绘图、聊天、工作流或聚合工具，需要统一接入多个模型。</p></div>
+        <div class="card"><h3>AI培训机构 / 课程团队</h3><p>希望给学员提供 AI 使用额度，但不想直接发原始模型 Key。</p></div>
+        <div class="card"><h3>AI社群 / 知识付费会员</h3><p>希望把 API Key 或模型额度包装成会员权益，增强续费理由。</p></div>
+        <div class="card"><h3>企业内部团队</h3><p>运营、客服、市场、开发等多人使用 AI，需要按部门或员工控制额度。</p></div>
+        <div class="card"><h3>软件外包 / AI服务商</h3><p>为客户交付 AI 应用、Dify/Coze/n8n 工作流或自动化项目，需要统一接口中台。</p></div>
+        <div class="card"><h3>自媒体矩阵 / 内容工作室</h3><p>多个账号和运营人员批量生产内容，需要按账号组或人员核算成本。</p></div>
+      </div>
+    </section>
+
+    <section id="scenarios">
+      <h2>典型使用场景</h2>
+      <table class="table">
+        <thead><tr><th>场景</th><th>原来的痛点</th><th>搭建后解决什么</th><th>客户如何使用</th></tr></thead>
+        <tbody>
+          <tr><td>AI工具站</td><td>前端要接多个模型，Key 分散，切换麻烦，成本不清楚。</td><td>前端只接一个兼容接口，后台统一管理渠道、价格、日志和额度。</td><td>按产品套餐或用户等级分配模型权限和使用额度。</td></tr>
+          <tr><td>AI培训课程</td><td>想给学员额度，又怕原始 Key 泄露或乱用。</td><td>为每个学员或班级创建独立 Key，可按课程周期限制使用。</td><td>开营时发测试 Key，结营后回收或调整额度。</td></tr>
+          <tr><td>会员权益</td><td>会员权益同质化，需要增加可感知的 AI 权益。</td><td>按会员等级分配不同接口额度和模型使用权。</td><td>把额度作为会员权益，后续引导续费或升级。</td></tr>
+          <tr><td>企业团队</td><td>多人共用账号或 Key，成本和权限不可控。</td><td>按部门、员工或项目创建 Key，统一查看用量和成本。</td><td>管理员按团队分配额度，离职或项目结束后及时停用。</td></tr>
+          <tr><td>AI解决方案服务商</td><td>每个项目重复接模型，客户用量不好统计。</td><td>把平台作为自己的 AI 接口中台，为不同客户或项目单独建 Key。</td><td>交付项目时统一走中台，后续按客户排查和统计。</td></tr>
+          <tr><td>内容工作室</td><td>文案、脚本、图片、客服等 AI 使用分散。</td><td>按账号组、人员或项目分配额度，限制高成本模型。</td><td>月底按人员和账号组查看用量，核算内容生产成本。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="pricing">
+      <h2>服务套餐</h2>
+      <div class="price-grid">
+        <div class="price primary">
+          <h3>核心服务：标准部署包</h3>
+          <span class="amount">3999 元/次</span>
+          <p>完成平台部署、域名 HTTPS、模型渠道配置、测试用户和使用说明交付。适合首次搭建、希望先把平台跑起来的客户。</p>
+        </div>
+        <div class="price secondary">
+          <h3>基础维护包</h3>
+          <span class="amount">999 元/月</span>
+          <span class="badge">可选</span>
+          <p>适合小团队、低频使用、希望有人兜底的客户。包含基础巡检、配置调整和轻度故障排查。</p>
+        </div>
+        <div class="price secondary">
+          <h3>深度维护包</h3>
+          <span class="amount">1999 元/月</span>
+          <span class="badge">可选</span>
+          <p>适合有学员、会员或员工在用，系统异常会影响业务的客户。包含更频繁支持和月度成本简报。</p>
+        </div>
+        <div class="price secondary">
+          <h3>定制增强</h3>
+          <span class="amount">5000 元起</span>
+          <span class="badge">按需评估</span>
+          <p>适合需要网站、会员系统、支付流程、复杂权限或多渠道报表的客户，具体按需求评估。</p>
+        </div>
+      </div>
+      <div class="note">
+        <p>维护包和定制增强均为可选服务。标准部署已包含 7 天基础调试，调试期结束后你可以自行维护，也可以按需选择维护服务。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>交付内容</h2>
+      <div class="grid">
+        <div class="card"><h3>平台与后台</h3><p>交付后台访问地址、管理员账号、基础配置和使用说明。</p></div>
+        <div class="card"><h3>接口与测试</h3><p>交付测试 Key、模型渠道测试结果，并确认至少一个模型渠道可调用。</p></div>
+        <div class="card"><h3>验收标准</h3><p>后台可登录、HTTPS 可访问、测试用户额度扣减正常，客户收到使用说明。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>不包含事项</h2>
+      <div class="grid two">
+        <div class="card">
+          <ul>
+            <li>服务器、域名、模型 Key、上游模型渠道费用不包含在部署费内。</li>
+            <li>大陆服务器 ICP 备案主体责任由客户自行承担并配合完成。</li>
+            <li>第三方云厂商、模型供应商、网络、域名或支付服务稳定性不由我们承诺。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul>
+            <li>我们不承接云资源代管，不用我方主体长期持有客户域名或服务器。</li>
+            <li>不包含客户终端用户客服、违法违规用途支持、垃圾营销或批量账号滥用支持。</li>
+            <li>复杂业务系统联调、支付、会员系统、品牌页面等属于定制增强。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <h2>没有域名和服务器怎么办</h2>
+      <div class="card">
+        <p>如果你暂时没有域名和服务器，我们可以提供推荐配置，并通过远程方式协助你完成云资源准备。域名、服务器等基础资源费用由你自行承担，建议使用你自己的云账号购买和持有。</p>
+        <p>我们负责协助选择配置、完成解析、SSL、服务器环境和平台部署。这样资产归属清晰，后续也方便你长期管理。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>默认推荐上线方案</h2>
+      <div class="grid two">
+        <div class="card">
+          <p>如果你没有特殊要求，我们建议第一阶段采用阿里云香港服务器快速上线。香港服务器通常不需要大陆 ICP 备案，适合先做内部使用、课程交付、会员权益、工具站测试和首批客户验证。</p>
+          <p>后续如果你需要长期面向大陆用户正式运营，也可以再评估是否迁移到大陆服务器并办理 ICP 备案。</p>
+        </div>
+        <div class="card">
+          <ul>
+            <li>云厂商：阿里云</li>
+            <li>地区：香港</li>
+            <li>服务器配置：正式交付建议按访问量评估，例如 2核4G / 40G 磁盘 / 3M-5M 带宽</li>
+            <li>系统：Ubuntu 22.04 LTS</li>
+            <li>域名：客户自己持有的 .com / .cn / 品牌相关域名</li>
+            <li>SSL：免费证书或自动化 HTTPS 配置</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note">
+        <p>基础云资源通常可以从每月几十元起步，但这只是最低启动预估，不承诺一定满足所有场景。具体价格以云厂商下单页面为准。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>维护是否可选</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>可以只买一次性部署</h3>
+          <p>标准部署包含 7 天基础调试。调试期结束后，你可以自行维护，也可以选择基础维护或深度维护。</p>
+        </div>
+        <div class="card">
+          <h3>单次支持口径</h3>
+          <p>未购买维护的后续新增需求或故障处理，我们会先评估问题范围，再给出处理方案和费用。单次支持 299 元起/次，具体以实际问题评估为准。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>FAQ</h2>
+      <div class="grid two">
+        <div class="card"><h3>这是不是卖模型 Key？</h3><p>不是。我们提供的是 AI 接口管理平台搭建与维护服务，模型 Key 和上游渠道由客户自行准备或承担费用。</p></div>
+        <div class="card"><h3>多久能交付？</h3><p>资料齐全后，标准部署通常 1-3 个工作日完成。复杂定制需要单独评估周期。</p></div>
+        <div class="card"><h3>可以签合同吗？</h3><p>可以。正式成交前可签署《AI接口管理平台搭建与维护服务协议》，明确交付范围、费用、验收、售后边界和数据安全责任。</p></div>
+        <div class="card"><h3>维护响应怎么理解？</h3><p>基础维护工作时间内通常 24 小时内响应；深度维护工作时间内优先响应，通常 4 小时内确认问题，12 小时内给出处理建议或排查进展。</p></div>
+      </div>
+    </section>
+
+    <section id="contact" class="cta">
+      <div>
+        <h2>想搭建自己的 AI 接口管理平台？</h2>
+        <p>发送你的使用场景、预计用户数、是否已有域名服务器、准备接入的模型渠道，我们会先判断是否适合标准部署。</p>
+      </div>
+      <div class="cta-actions">
+        <a class="button" href="https://t.me/SCLinks001">Telegram 咨询</a>
+        <a class="button secondary" href="mailto:sclinks.service@gmail.com">邮件咨询</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    SC Links B2B Service · 国内客户 AI接口管理平台搭建与维护服务。api.sc-links.com 作为系统用途，不作为陌生客户营销演示入口。
+  </footer>
+</body>
+</html>
